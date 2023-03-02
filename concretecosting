@@ -1,0 +1,452 @@
+import java.util.Scanner;
+import java.text.NumberFormat;
+
+public class ConcreteCosting{
+
+    //variable declaration
+    static double finalCost = 0;
+    static int concreteCost = 165;
+    static double depthDriveway = 0.5;
+    static double depthSidewalk = (0.333333333);
+    static boolean color = false;
+    static boolean stamping = false;
+    static boolean driveway = false, sidewalk = false;
+
+    static double length = 0, width = 0, additional = 0, area;
+    static double drivewayVolume, sidewalkVolume;
+    
+    //invoicing variables
+    static double colorCost=0, reinforcingCost=0, finishCost=0, expansionCost=0, releaseCost=0, sealerCost=0,
+    baseConcreteCost=0;
+     
+    //colorChoice method
+    public static void colorChoice() {
+
+        //asks the user if they want color with a sanner object
+        Scanner input = new Scanner(System.in);
+        String choice = "";
+        System.out.print("Would you like color on your area? (Y/N): ");
+        choice = input.nextLine();
+        
+        //if which controls what happens if user selects that they want color
+        if(choice.equalsIgnoreCase("y")){
+            System.out.println("You have chosen Yes color.");
+            //changes static boolean variable "color" to true
+            color = true;
+            //local variable "cost" which does the math for if the user wants color
+            double cost = drivewayVolume*73;
+           
+            colorCost+=cost;
+        }
+        else if(choice.equalsIgnoreCase("n")){
+            //logic for if user does not want color
+            System.out.println("You have chosen No color.");
+        }
+        else{
+            //default if user enters invalid entry
+            System.out.println("That is not a valid choice.");
+            colorChoice();
+        }
+    //finishChoice method which asks the user about their finishing on the concrete
+    }
+    public static void finishChoice(){
+
+        //new scanner object and local variable "choice"
+        Scanner input = new Scanner(System.in);
+        String choice = "";
+
+        //user will always enter this loop
+        while(true){
+            //asks user if they want stamping on their area using a scanner
+            System.out.print("Would you like stamping on your area? (Y/N): ");
+            choice = input.nextLine();
+            //if which controls what happens if user wants stamping
+            if(choice.equalsIgnoreCase("y")){
+                //logic for if user wants stamping
+                System.out.println("You have chosen Yes stamping");
+                stamping = true;
+                area = length * width;
+                double days = (int)Math.ceil(area/500);
+                //System.out.println("days " + days);
+                double stampingCost = days*150;
+                finishCost+=stampingCost;
+                break;  
+            }
+            //else if which controls what happens if user does not want stamping
+            else if(choice.equalsIgnoreCase("n")){
+                System.out.println("You have chosen No stamping.");
+                stamping = false;
+                break;
+            }
+            //else which ensures user input is a valid selection
+            else{
+                System.out.println("That is not a valid choice");
+                finishChoice();
+            }
+        }
+        //if no stamping, user is notified that they will recieve broom finish with no added cost
+        if(stamping==false){
+            System.out.println("Broom finish (no extra cost)");
+        }
+    }
+    //reinforcementChoice method
+    public static void reinforcementChoice(){
+
+        //new scanner object + local "choice" variable
+        Scanner input = new Scanner(System.in);
+        String choice = "";
+        
+        //asks user if they want fiber mesh and accept input using a scanner
+        System.out.print("Would you like reinforcement of fiber mesh in your concrete? ($15 per cubic meter) (Y/N): ");
+        choice = input.nextLine();
+        //local cost variable
+        double cost;
+
+        //if user selects yes
+        if(choice.equalsIgnoreCase("y")){
+            System.out.println("You have chosen Yes to reinforcing fiber mesh.");
+            //if driveway is true
+            if(driveway==true){
+               //takes the driveway volume and multiplies it by 15$ per meter to get the cost for the mesh
+               cost = drivewayVolume*15;
+               
+               //adds cost to reinforcingCost variable
+               reinforcingCost+=cost;
+            //if sidewalk is true then does same logic but for sidewalkVolume   
+            }
+            else if(sidewalk==true){
+               cost = sidewalkVolume*15;
+               
+               reinforcingCost+=cost; 
+            } 
+        }
+        //if user does not want reinforcing mesh, it prints a statement telling them they selected no
+        else if(choice.equalsIgnoreCase("n")){
+            System.out.println("You have chosen No to reinforcing fiber mesh.");
+        }
+        //if user does not enter a valid choice, method begins again 
+        else{
+            System.out.println("That is not a valid choice.");
+            reinforcementChoice();
+        }
+    }
+    //expansionChoice method
+    public static void expansionChoice(){
+
+        //new scanner object & local variable declaration
+        Scanner input = new Scanner (System.in);
+        double expansionFt = 0, cost = 0;
+        //asks user how much expansion they need and takes their input with the scanner
+        System.out.print("How many feet of expansion joints do you need for your area in ft? ($5 per 10ft): ");
+        expansionFt = input.nextDouble();
+
+        
+        //if user enters a value greater than or equal to 1 for expansionFt
+        if(expansionFt>=1){
+            System.out.println("You have entered that you need expansion joints for your area.");
+            //puts Ft entered up to the next 10
+            expansionFt = (int)Math.ceil(expansionFt/10.0)*10;
+            //uses local cost variable to calculate cost for the expansion
+            cost = (expansionFt/10)*5;
+            
+            //adds cost to expansionCost invoice variable
+            expansionCost+=cost;
+        }
+        //if user enters a number which is less than 1
+        else{
+            System.out.println("You have entered that you do not need expansion joints for your area.");
+        }
+
+    }
+    //releaseChoice method
+    public static void releaseChoice(){
+
+        //new scanner object 
+        Scanner input = new Scanner(System.in);
+        //local variables for method
+        String choice = "";
+        double pails;
+        double cost;
+        area = length*width;
+
+        //if user has stamping
+        if(stamping == true){
+            //release will be added b/c it is essential with stamping
+            System.out.println("Release has been added to the total b/c it is essential with stamping.");
+            //num of pails is 1 per 300sqft 
+            pails = (int)Math.ceil(area/300);
+            //System.out.println("Pails: " + pails);
+            //local cost variable is number of pails * 90
+            cost = pails*90;
+            
+            //adds cost to releaseCost invoice variable
+            releaseCost+=cost;
+        }
+        //if user does not have stamping
+        else{
+            //asks if they want release and accepts input using scanner object
+            System.out.print("Would you like release in your concrete (Y/N): ");
+            choice = input.nextLine();
+
+            //if they select yes, ignores case of input which minimizes user error
+            if(choice.equalsIgnoreCase("y")){
+                System.out.println("You have chosen Yes release");
+                //pails is 1 per 300sqft and calculates cost by num of pails * 90$ per pail
+                pails = (int)Math.ceil(area/300); 
+                cost = pails*90;
+                
+                //adds cost to release cost variable
+                releaseCost+=cost;
+            }
+            //if user does not want release, informs them they do not want release
+            else if(choice.equalsIgnoreCase("n")){
+                System.out.println("You have chosen No release.");
+            }
+            //if user inputs an invalid selection, it informs them and recalls the method
+            else{
+                System.out.println("That is not a valid choice.");
+                releaseChoice();
+            }
+        }
+    }
+    //sealerChoice method
+    public static void sealerChoice(){
+
+        //new scanner object
+        Scanner input = new Scanner(System.in);
+        //declaration of variables which are used within method
+        String choice = "";
+        double pails;
+        double cost;
+        //calcuates area with width and length
+        area = length*width;
+        
+        //if user has color in their concrete, sealer is essential
+        if(color==true){
+            System.out.println("Sealer has been added to the total b/c it is essential with color.");
+            //calculates number of pails, 1 per 1500sqft
+            pails = (int)Math.ceil(area/1500);
+            //calculates cost by number of pails * 160$ per pail
+            cost = pails*160;
+            sealerCost+=cost;
+        }
+        //if user does not have color
+        else{
+            //asks them if they want sealer and accepts input using scanner object
+            System.out.print("Would you like to add sealer to your concrete? ($160/1500sqft) (Y/N): ");
+            choice = input.nextLine();
+
+            //if user selects yes, same logic as before 
+            if(choice.equalsIgnoreCase("y")){
+                System.out.println("You have chosen Yes sealer.");
+                pails = (int)Math.ceil(area/1500);
+                cost = pails*160;
+                sealerCost+=cost;
+            }
+            //if user selects no, informs them they have selected no and exits method
+            else if(choice.equalsIgnoreCase("n")){
+                System.out.println("You have chosen No sealer.");
+            }
+            //if user enters invalid selection, informs them and recalls method
+            else{
+                System.out.println("That is not a valid choice.");
+                sealerChoice();
+            }
+        }
+    }
+
+    //main method
+    public static void main(String[] args){
+
+        //new scanner object and numberformat object
+        Scanner input = new Scanner(System.in);
+        NumberFormat nF = NumberFormat.getCurrencyInstance();
+
+        //local areaNum and counter variables
+        int areaNum = 0, count = 1;
+
+        /*welcomes user to program, asks them how many areas and accepts input 
+          using scanner and areaNum variable*/
+        System.out.println("Welcome to the concrete costing program.");
+        System.out.print("Please enter the number of areas you would like to calculate: ");
+        areaNum = input.nextInt();
+
+        //while loop to repeat for how many areas there are
+        while(areaNum>=1){
+            //asks user if area is driveway or sidewalk and accepts input using scanner and choice variable
+            System.out.print("Is area number " + count + " a driveway or a sidewalk?: (1 for driveway or 2 for sidewalk): ");
+            int choice = input.nextInt();
+            //switch for choice variable
+            switch(choice){
+                //case 1 (driveway)
+                case 1:
+                    //driveway=true
+                    driveway = true;
+
+                    //asks user the length of driveway in ft & accepts input using scanner
+                    System.out.print("What is the length of your driveway in ft?: ");
+                        length = input.nextDouble();
+
+                    /*asks user for additional length in inches,
+                      divides by twelve and adds to length variable 
+                        */ 
+                    System.out.print("What is the additional length of your driveway in in?: ");
+                        additional = input.nextDouble();
+                        additional /= 12;
+                        length+= additional;
+                    //resets additonal to zero once it has been added to length        
+                    additional = 0;
+
+                    //asks user for width of driveway in ft and accepts input w/ scanner
+                    System.out.print("What is the width of your driveway in ft?: ");
+                        width = input.nextDouble();
+
+                    //asks additional width in inches, divides by twelve and adds to width
+                    System.out.print("What is the additional width of your driveway in ft?: ");
+                        additional = input.nextDouble();
+                        additional /= 12;
+                        width+= additional;
+                        
+                    //resets additional to zero    
+                    additional = 0;    
+
+                    //calculates volume using length width and depth
+                    drivewayVolume = length*width*depthDriveway;
+
+                    //converts volume to metres
+                    drivewayVolume *=0.3048;
+                    
+                    //volume is put up to the next .25 value and .25 is also added
+                    drivewayVolume = Math.ceil(drivewayVolume*4)/4;
+                    drivewayVolume+=0.25;
+                    
+                    //calls on all methods, order has been thought out b/c some are dependent on others for cases
+                    reinforcementChoice();
+                    finishChoice();
+                    releaseChoice();
+                    colorChoice();
+                    sealerChoice();
+                    expansionChoice();
+
+                    //drivewayCost is calculated and added to invoice variable baseConcreteCost
+                    double drivewayCost = drivewayVolume * concreteCost;
+                    baseConcreteCost+=drivewayCost;
+
+                    //area num is decremented and counter is incremented
+                    areaNum--;
+                    count++;
+
+                    //for every new area it prints a statement for clarity
+                    if(areaNum>=1){
+                        System.out.println();
+                        System.out.println("Next area.");
+                        System.out.println();
+                    }
+
+                    //breaks out of switch
+                    break;
+                //case 2 (sidewalk)    
+                case 2:
+                    
+                    //boolean sidewalk is set to true
+                    sidewalk = true;
+
+                    //asks user for length & additional length of sidewalk & same logic is done as for driveway
+                    System.out.print("What is the length of your sidewalk in ft?: ");
+                    length = input.nextDouble();
+
+                    System.out.print("What is the additional length of your sidewalk in in?: ");
+                    additional = input.nextDouble();
+                    additional /= 12;
+                    length+= additional;
+
+                    additional = 0;
+
+                    //asks user for width & additional width of sidewalk & same logic is done as for driveway
+                    System.out.print("What is the width of your sidewalk in ft?: ");
+                        width = input.nextDouble();
+
+                    System.out.print("What is the additional width of your sidewalk in ft?: ");
+                        additional = input.nextDouble();
+                        additional /= 12;
+                        width+= additional;
+                        
+                    additional = 0;    
+
+                    //sidewalk volume is calculated using length width and depth
+                    sidewalkVolume = length*width*depthSidewalk;
+
+                    //sidewalk volume is converted into metres
+                    sidewalkVolume *=0.3048;
+                    
+                    //sidewalk volume is put up to the next .25 value and .25 is added
+                    sidewalkVolume = Math.ceil((sidewalkVolume*4)/4);
+                    sidewalkVolume+=0.25;
+
+                    //all methods are called upon in order b/c of cases
+                    reinforcementChoice();
+                    finishChoice();
+                    releaseChoice();
+                    colorChoice();
+                    sealerChoice();
+                    expansionChoice();
+
+                    //calculates sidewalk cost by multiplying volume by concrete cost
+                    double sidewalkCost = sidewalkVolume * concreteCost;
+                    //concrete cost is added to invoice variable baseConcreteCost
+                    baseConcreteCost+=sidewalkCost;
+
+                    //area num is decremented and counter is incremented
+                    areaNum--;
+                    count++;
+                   
+                    //for every new area, "Next area." is displayed for clarity
+                    if(areaNum>=1){
+                        System.out.println();
+                        System.out.println("Next area.");
+                        System.out.println();
+                    }
+                    //breaks out of switch
+                    break;
+                default:
+                    //default case if user enters invalid choice, prints statement informing them of their invalid choice
+                    System.out.println("That is not a valid choice.");
+            }
+        }
+        //invoice
+        
+        System.out.println("Concrete cost invoice: \n");
+        
+        //prints out invoicing variables and uses NumberFormat object "nF" to display values as a currency instance
+        System.out.println("Base concrete cost: " + nF.format(baseConcreteCost));
+        System.out.println("Coloring: " + nF.format(colorCost));
+        System.out.println("Reinforcement: " + nF.format(reinforcingCost));
+        System.out.println("Finishing: " + nF.format(finishCost));
+        System.out.println("Expansion joints: " + nF.format(expansionCost));
+        System.out.println("Release agents: " + nF.format(releaseCost));
+        System.out.println("Sealer coatings: " + nF.format(sealerCost));
+        
+        //adds all costs to finalCost variable
+        finalCost += (baseConcreteCost+colorCost+reinforcingCost+finishCost+expansionCost+releaseCost+sealerCost);
+        
+        System.out.println("*All services have a 15% markup included*");
+        System.out.println("Cost: " + nF.format(finalCost));
+        
+        //calculates tax and markup
+        double hst = finalCost*0.13;
+        double markup = finalCost*0.15;
+        
+        //prints tax and markup
+        System.out.println("HST: " + nF.format(hst));
+        System.out.println("Markup: " + nF.format(markup));
+        
+        //adds tax and markup to finalCost
+        finalCost+=hst;
+        finalCost+=markup;
+        
+        
+        //prints final total
+        System.out.println("Total: " + nF.format(finalCost));
+
+    }
+}
